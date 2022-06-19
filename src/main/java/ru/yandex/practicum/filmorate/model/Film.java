@@ -12,8 +12,8 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class Film {
-    private final int MAX_DESCRIPTION_LEN = 200;
-    private final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
+    public static final int MAX_DESCRIPTION_LEN = 200;
+    public static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
 
     private Long id;
     @NotNull

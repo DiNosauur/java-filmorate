@@ -2,11 +2,9 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.opentest4j.AssertionFailedError;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -15,11 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
 
-    UserController uc;
+    private UserController uc;
 
     @BeforeEach
     public void BeforeEach() {
-       uc = new UserController();
+        uc = new UserController();
     }
 
     @Test
@@ -31,7 +29,7 @@ class UserControllerTest {
                 .birthday(LocalDate.of(2022, 1, 1))
                 .build());
         Collection<User> users = uc.findAll();
-        assertEquals(1, users.size(),"Неверное количество пользователей.");
+        assertEquals(1, users.size(), "Неверное количество пользователей.");
     }
 
     @Test
@@ -85,7 +83,7 @@ class UserControllerTest {
                 .birthday(LocalDate.of(2022, 1, 1))
                 .build());
         List<User> users = (List<User>) uc.findAll();
-        assertEquals(users.get(0).getName(),"login");
+        assertEquals(users.get(0).getName(), "login");
     }
 
     @Test

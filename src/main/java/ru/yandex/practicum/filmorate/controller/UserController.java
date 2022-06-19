@@ -31,23 +31,13 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-        if(user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new ValidationException("Адрес электронной почты не может быть пустым.");
-        } else if(user.getEmail().indexOf("@") == -1) {
-            throw new ValidationException("Адрес электронной почты должен содержать символ @.");
-        }
-        if(user.getLogin() == null || user.getLogin().isBlank()) {
-            throw new ValidationException("Логин не может быть пустым и содержать пробелы.");
-        }
-        if(user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("День рождения не может быть больше текущей даты.");
-        }
-        if(user.getId() == null) {
+        userValidate(user);
+        if (user.getId() == null) {
             user.setId(sequenceId++);
-        } else if(user.getId() < 0) {
+        } else if (user.getId() < 0) {
             throw new ValidationException("Идентификатор пользователя не может быть отрицательным.");
         }
-        if(users.containsKey(user.getId())) {
+        if (users.containsKey(user.getId())) {
             throw new ValidationException("Пользователь с таким идентификатором " +
                     user.getId() + " уже зарегистрирован.");
         }
@@ -58,14 +48,26 @@ public class UserController {
 
     @PutMapping
     public User put(@RequestBody User user) {
-        if(user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new ValidationException("Адрес электронной почты не может быть пустым.");
-        }
-        if(user.getId() == null || user.getId() < 0) {
+        userValidate(user);
+        if (user.getId() == null || user.getId() < 0) {
             throw new ValidationException("Идентификатор пользователя не может быть пустым или отрицательным");
         }
         users.put(user.getId(), user);
         log.info("Обновлён юзер c id = {}", user.getId());
         return user;
+    }
+
+    private void userValidate(User user) {
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            throw new ValidationException("Адрес электронной почты не может быть пустым.");
+        } else if (user.getEmail().indexOf("@") == -1) {
+            throw new ValidationException("Адрес электронной почты должен содержать символ @.");
+        }
+        if (user.getLogin() == null || user.getLogin().isBlank()) {
+            throw new ValidationException("Логин не может быть пустым и содержать пробелы.");
+        }
+        if (user.getBirthday().isAfter(LocalDate.now())) {
+            throw new ValidationException("День рождения не может быть больше текущей даты.");
+        }
     }
 }

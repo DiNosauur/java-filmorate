@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
 
-    FilmController fc;
+    private FilmController fc;
 
     @BeforeEach
     public void BeforeEach() {
@@ -29,7 +28,7 @@ class FilmControllerTest {
                 .duration(127)
                 .build());
         Collection<Film> films = fc.findAll();
-        assertEquals(1, films.size(),"Неверное количество фильмов.");
+        assertEquals(1, films.size(), "Неверное количество фильмов.");
     }
 
     @Test
