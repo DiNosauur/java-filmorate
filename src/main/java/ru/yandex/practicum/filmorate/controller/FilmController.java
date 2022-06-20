@@ -30,7 +30,7 @@ public class FilmController {
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        filmValidate(film);
+        validate(film);
         if (film.getId() == null) {
             film.setId(sequenceId++);
         } else if (film.getId() < 0) {
@@ -43,7 +43,7 @@ public class FilmController {
 
     @PutMapping
     public Film put(@RequestBody Film film) {
-        filmValidate(film);
+        validate(film);
         if (film.getId() == null || film.getId() < 0) {
             throw new ValidationException("Идентификатор фильма не может быть пустым или отрицательным.");
         }
@@ -52,7 +52,7 @@ public class FilmController {
         return film;
     }
 
-    private void filmValidate(Film film) {
+    private void validate(Film film) {
         if (film.getName() == null || film.getName().isBlank()) {
             throw new ValidationException("Название фильма не может быть пустым.");
         }

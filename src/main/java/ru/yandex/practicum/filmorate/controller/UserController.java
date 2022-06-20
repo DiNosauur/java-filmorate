@@ -31,7 +31,7 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-        userValidate(user);
+        validate(user);
         if (user.getId() == null) {
             user.setId(sequenceId++);
         } else if (user.getId() < 0) {
@@ -48,7 +48,7 @@ public class UserController {
 
     @PutMapping
     public User put(@RequestBody User user) {
-        userValidate(user);
+        validate(user);
         if (user.getId() == null || user.getId() < 0) {
             throw new ValidationException("Идентификатор пользователя не может быть пустым или отрицательным");
         }
@@ -57,7 +57,7 @@ public class UserController {
         return user;
     }
 
-    private void userValidate(User user) {
+    private void validate(User user) {
         if (user.getEmail() == null || user.getEmail().isBlank()) {
             throw new ValidationException("Адрес электронной почты не может быть пустым.");
         } else if (user.getEmail().indexOf("@") == -1) {
