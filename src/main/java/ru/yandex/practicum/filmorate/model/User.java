@@ -7,11 +7,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
 public class User {
     private Long id;
+    private Set<Long> friends;
     @Email
     private String email;
     private String name;
@@ -27,5 +30,12 @@ public class User {
             return login;
         }
         return name;
+    }
+
+    public Set<Long> getFriends() {
+        if (friends == null) {
+            friends = new HashSet<>();
+        }
+        return friends;
     }
 }
