@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -12,6 +13,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class UserService {
     private final UserStorage userStorage;
@@ -27,11 +29,13 @@ public class UserService {
 
     public User createUser(User user) {
         validate(user);
+        log.debug(String.format("Сохранение данных пользователя %s", user.getName()));
         return userStorage.createUser(user);
     }
 
     public User updateUser(User user) {
         validate(user);
+        log.debug(String.format("Изменение данных пользователя %s", user.getName()));
         return userStorage.updateUser(user);
     }
 
@@ -65,6 +69,7 @@ public class UserService {
                     friendId));
         }
         userStorage.addFriend(id, friendId);
+        log.debug(String.format("Пользователь (id = %s) добавил пользователя (id = %s) в друзья", id, friendId));
     }
 
     public void delFriend(Long id, Long friendId) {
@@ -79,6 +84,7 @@ public class UserService {
                     friendId));
         }
         userStorage.delFriend(id, friendId);
+        log.debug(String.format("Пользователь (id = %s) удалил пользователя (id = %s) из друзей", id, friendId));
     }
 
     public Collection<User> getFriends(Long id) {

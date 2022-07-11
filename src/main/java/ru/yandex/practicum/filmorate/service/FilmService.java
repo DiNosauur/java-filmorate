@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
@@ -11,6 +12,7 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class FilmService {
     private final FilmStorage filmStorage;
@@ -28,15 +30,18 @@ public class FilmService {
 
     public Film createFilm(Film film) {
         validate(film);
+        log.debug(String.format("Сохранение фильма %s", film.getName()));
         return filmStorage.createFilm(film);
     }
 
     public Film updateFilm(Film film) {
         validate(film);
+        log.debug(String.format("Изменение фильма %s", film.getName()));
         return filmStorage.updateFilm(film);
     }
 
     public Film getFilm(Long id) {
+        log.debug(String.format("Получение фильма с id = %s", id));
         return filmStorage.getFilm(id);
     }
 
@@ -67,6 +72,7 @@ public class FilmService {
                     userId));
         }
         filmStorage.addLike(id, userId);
+        log.debug(String.format("Пользователь (id = %s) поставил лайк фильму (id = %s)", userId, id));
     }
 
     public void delLike(Long id, Long userId) {
@@ -81,6 +87,7 @@ public class FilmService {
                     userId));
         }
         filmStorage.delLike(id, userId);
+        log.debug(String.format("Пользователь (id = %s) удалил лайк фильму (id = %s)", userId, id));
     }
 
     public Collection<Film> getPopularFilms(int count) {
