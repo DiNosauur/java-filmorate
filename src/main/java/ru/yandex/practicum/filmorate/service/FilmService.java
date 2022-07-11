@@ -30,18 +30,18 @@ public class FilmService {
 
     public Film createFilm(Film film) {
         validate(film);
-        log.debug(String.format("Сохранение фильма %s", film.getName()));
+        log.debug("Сохранение фильма {}", film.getName());
         return filmStorage.createFilm(film);
     }
 
     public Film updateFilm(Film film) {
         validate(film);
-        log.debug(String.format("Изменение фильма %s", film.getName()));
+        log.debug("Изменение фильма {}", film.getName());
         return filmStorage.updateFilm(film);
     }
 
     public Film getFilm(Long id) {
-        log.debug(String.format("Получение фильма с id = %s", id));
+        log.debug("Получение фильма с id = {}", id);
         return filmStorage.getFilm(id);
     }
 
@@ -72,7 +72,7 @@ public class FilmService {
                     userId));
         }
         filmStorage.addLike(id, userId);
-        log.debug(String.format("Пользователь (id = %s) поставил лайк фильму (id = %s)", userId, id));
+        log.debug("Пользователь (id = {}) поставил лайк фильму (id = {})", userId, id);
     }
 
     public void delLike(Long id, Long userId) {
@@ -87,7 +87,7 @@ public class FilmService {
                     userId));
         }
         filmStorage.delLike(id, userId);
-        log.debug(String.format("Пользователь (id = %s) удалил лайк фильму (id = %s)", userId, id));
+        log.debug("Пользователь (id = {}) удалил лайк фильму (id = {})", userId, id);
     }
 
     public Collection<Film> getPopularFilms(int count) {

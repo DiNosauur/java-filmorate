@@ -29,13 +29,13 @@ public class UserService {
 
     public User createUser(User user) {
         validate(user);
-        log.debug(String.format("Сохранение данных пользователя %s", user.getName()));
+        log.debug("Сохранение данных пользователя {}", user.getName());
         return userStorage.createUser(user);
     }
 
     public User updateUser(User user) {
         validate(user);
-        log.debug(String.format("Изменение данных пользователя %s", user.getName()));
+        log.debug("Изменение данных пользователя {}", user.getName());
         return userStorage.updateUser(user);
     }
 
@@ -69,7 +69,7 @@ public class UserService {
                     friendId));
         }
         userStorage.addFriend(id, friendId);
-        log.debug(String.format("Пользователь (id = %s) добавил пользователя (id = %s) в друзья", id, friendId));
+        log.debug("Пользователь (id = {}) добавил пользователя (id = {}) в друзья", id, friendId);
     }
 
     public void delFriend(Long id, Long friendId) {
@@ -84,7 +84,7 @@ public class UserService {
                     friendId));
         }
         userStorage.delFriend(id, friendId);
-        log.debug(String.format("Пользователь (id = %s) удалил пользователя (id = %s) из друзей", id, friendId));
+        log.debug("Пользователь (id = {}) удалил пользователя (id = {}) из друзей", id, friendId);
     }
 
     public Collection<User> getFriends(Long id) {
