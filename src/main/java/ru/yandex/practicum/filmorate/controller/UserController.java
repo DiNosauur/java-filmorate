@@ -1,73 +1,66 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.*;
 
-@Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private Long sequenceId = 1l;
-    private final Map<Long, User> users = new HashMap<>();
 
-    private List<User> getAllUsers() {
-        List<User> userList = new ArrayList<>();
-        for (User user : users.values()) {
-            userList.add(user);
-        }
-        return userList;
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public Collection<User> findAll() {
-        return getAllUsers();
+        return userService.findAll();
     }
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-        validate(user);
-        if (user.getId() == null) {
-            user.setId(sequenceId++);
-        } else if (user.getId() < 0) {
-            throw new ValidationException("Идентификатор пользователя не может быть отрицательным.");
-        }
-        if (users.containsKey(user.getId())) {
-            throw new ValidationException("Пользователь с таким идентификатором " +
-                    user.getId() + " уже зарегистрирован.");
-        }
-        users.put(user.getId(), user);
-        log.info("Добавлен юзер {}", user.getEmail());
-        return user;
+        return userService.createUser(user);
     }
 
     @PutMapping
     public User put(@RequestBody User user) {
-        validate(user);
-        if (user.getId() == null || user.getId() < 0) {
-            throw new ValidationException("Идентификатор пользователя не может быть пустым или отрицательным");
-        }
-        users.put(user.getId(), user);
-        log.info("Обновлён юзер c id = {}", user.getId());
-        return user;
+        return userService.updateUser(user);
     }
 
-    private void validate(User user) {
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            throw new ValidationException("Адрес электронной почты не может быть пустым.");
-        } else if (user.getEmail().indexOf("@") == -1) {
-            throw new ValidationException("Адрес электронной почты должен содержать символ @.");
-        }
-        if (user.getLogin() == null || user.getLogin().isBlank()) {
-            throw new ValidationException("Логин не может быть пустым и содержать пробелы.");
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("День рождения не может быть больше текущей даты.");
-        }
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable("id") Long id){
+        return userService.getUser(id);
     }
+
+    //PUT /users/{id}/friends/{friendId} — добавление в друзья.
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable("id") Long id, @PathVariable("friendId") Long friendId){
+        userService.addFriend(id, friendId);
+    }
+
+    //DELETE /users/{id}/friends/{friendId} — удаление из друзей.
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void delFriend(@PathVariable("id") Long id, @PathVariable("friendId") Long friendId){
+        userService.delFriend(id, friendId);
+    }
+
+    //GET /users/{id}/friends — возвращаем список пользователей, являющихся его друзьями.
+    @GetMapping("/{id}/friends")
+    public Collection<User> getFriends(@PathVariable("id") Long id){
+        return userService.getFriends(id);
+    }
+
+    //GET /users/{id}/friends/common/{otherId} — список друзей, общих с другим пользователем.
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public Collection<User> getCommonFriends(@PathVariable("id") Long id, @PathVariable("otherId") Long otherId){
+        return userService.getCommonFriends(id, otherId);
+    }
+
 }
