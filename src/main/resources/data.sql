@@ -1,9 +1,9 @@
-MERGE INTO GENRES KEY (ID) VALUES (1, 'Комедия');
-MERGE INTO GENRES KEY (ID) VALUES (2, 'Драма');
-MERGE INTO GENRES KEY (ID) VALUES (3, 'Мультфильм');
-MERGE INTO GENRES KEY (ID) VALUES (4, 'Триллер');
-MERGE INTO GENRES KEY (ID) VALUES (5, 'Документальный');
-MERGE INTO GENRES KEY (ID) VALUES (6, 'Боевик');
+MERGE INTO GENRES KEY (ID) VALUES (1, 'РљРѕРјРµРґРёСЏ');
+MERGE INTO GENRES KEY (ID) VALUES (2, 'Р”СЂР°РјР°');
+MERGE INTO GENRES KEY (ID) VALUES (3, 'РњСѓР»СЊС‚С„РёР»СЊРј');
+MERGE INTO GENRES KEY (ID) VALUES (4, 'РўСЂРёР»Р»РµСЂ');
+MERGE INTO GENRES KEY (ID) VALUES (5, 'Р”РѕРєСѓРјРµРЅС‚Р°Р»СЊРЅС‹Р№');
+MERGE INTO GENRES KEY (ID) VALUES (6, 'Р‘РѕРµРІРёРє');
 
 MERGE INTO MPA KEY (ID) VALUES (1, 'G');
 MERGE INTO MPA KEY (ID) VALUES (2, 'PG');
