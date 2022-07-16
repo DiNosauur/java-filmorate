@@ -16,6 +16,7 @@ import java.util.Set;
 @Slf4j
 @Service
 public class UserService {
+
     private final UserStorage userStorage;
 
     @Autowired
@@ -29,18 +30,39 @@ public class UserService {
 
     public User createUser(User user) {
         validate(user);
+        if (user.getId() != null && user.getId() < 0) {
+            throw new ValidationException("Идентификатор пользователя не может быть отрицательным.");
+        }
+        if (user.getId() != null && getUser(user.getId()) != null) {
+            throw new ValidationException("Пользователь с таким идентификатором " +
+                    user.getId() + " уже зарегистрирован.");
+        }
         log.debug("Сохранение данных пользователя {}", user.getName());
         return userStorage.createUser(user);
     }
 
     public User updateUser(User user) {
         validate(user);
+        if (user.getId() == null) {
+            throw new ValidationException("Идентификатор пользователя не может быть пустым");
+        }
+        if (getUser(user.getId()) == null) {
+            throw new NotFoundException(String.format(
+                    "Пользователь (id = %s) не найден",
+                    user.getId()));
+        }
         log.debug("Изменение данных пользователя {}", user.getName());
         return userStorage.updateUser(user);
     }
 
     public User getUser(Long id) {
-        return userStorage.getUser(id);
+        User user = userStorage.getUser(id);
+        if (user == null) {
+            throw new NotFoundException(String.format(
+                    "Пользователь (id = %s) не найден",
+                    id));
+        }
+        return user;
     }
 
     private void validate(User user) {

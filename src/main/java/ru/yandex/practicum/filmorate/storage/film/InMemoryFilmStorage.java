@@ -70,4 +70,12 @@ public class InMemoryFilmStorage implements FilmStorage {
             films.get(id).getLikes().remove(userId);
         }
     }
+
+    @Override
+    public Collection<Long> getLikes(Long filmId) {
+        if (filmId == null || films.get(filmId) == null) {
+            return null;
+        }
+        return films.get(filmId).getLikes();
+    }
 }

@@ -30,19 +30,36 @@ public class FilmService {
 
     public Film createFilm(Film film) {
         validate(film);
+        if (film.getId() != null && film.getId() < 0) {
+            throw new ValidationException("Идентификатор фильма не может быть отрицательным.");
+        }
         log.debug("Сохранение фильма {}", film.getName());
         return filmStorage.createFilm(film);
     }
 
     public Film updateFilm(Film film) {
         validate(film);
+        if (film.getId() == null) {
+            throw new ValidationException("Идентификатор фильма не может быть пустым.");
+        }
+        if (getFilm(film.getId()) == null) {
+            throw new NotFoundException(String.format(
+                    "Фильм (id = %s) не найден",
+                    film.getId()));
+        }
         log.debug("Изменение фильма {}", film.getName());
         return filmStorage.updateFilm(film);
     }
 
     public Film getFilm(Long id) {
+        Film film = filmStorage.getFilm(id);
+        if (film == null) {
+            throw new NotFoundException(String.format(
+                    "Фильм (id = %s) не найден",
+                    id));
+        }
         log.debug("Получение фильма с id = {}", id);
-        return filmStorage.getFilm(id);
+        return film;
     }
 
     private void validate(Film film) {
