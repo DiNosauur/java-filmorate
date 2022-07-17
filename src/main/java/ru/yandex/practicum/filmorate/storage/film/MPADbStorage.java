@@ -15,10 +15,10 @@ public class MPADbStorage implements MPAStorage {
     private final JdbcTemplate jdbcTemplate;
     private final Map<Integer, MPA> mpa = new HashMap<>();
 
-    public MPADbStorage(JdbcTemplate jdbcTemplate){
+    public MPADbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from MPA");
-        while(userRows.next()) {
+        while (userRows.next()) {
             mpa.put(userRows.getInt("id")
                     , MPA.builder()
                             .id(userRows.getInt("id"))

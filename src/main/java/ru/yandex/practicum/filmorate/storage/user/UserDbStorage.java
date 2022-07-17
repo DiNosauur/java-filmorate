@@ -20,25 +20,38 @@ import java.util.Collection;
 @Primary
 public class UserDbStorage implements UserStorage {
 
+    private static final String SQL_FIND_ALL_USERS =
+            "select * from users";
+    private static final String SQL_CREATE_USER =
+            "insert into users(email, name, login, birthday) values (?, ?, ?, ?)";
+    private static final String SQL_UPDATE_USER =
+            "update users set email = ?, name = ?, login = ?, birthday = ? where id = ?";
+    private static final String SQL_GET_USER =
+            "select * from users where id = ?";
+    private static final String SQL_ADD_FRIEND =
+            "insert into FRIENDS (FRIEND_ID_FROM, FRIEND_ID_TO) values (?, ?)";
+    private static final String SQL_DEL_FRIEND =
+            "delete from FRIENDS where FRIEND_ID_FROM = ? and FRIEND_ID_TO = ?";
+    private static final String SQL_GET_FRIENDS =
+            "select FRIEND_ID_TO as ID from FRIENDS where FRIEND_ID_FROM = ?";
+
     private final JdbcTemplate jdbcTemplate;
 
-    public UserDbStorage(JdbcTemplate jdbcTemplate){
+    public UserDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Collection<User> findAll() {
-        String sql = "select * from users";
-        return jdbcTemplate.query(sql, this::makeUser);
+        return jdbcTemplate.query(SQL_FIND_ALL_USERS, this::makeUser);
     }
 
     @Override
     public User createUser(User user) {
-        String sqlQuery = "insert into users(email, name, login, birthday) " +
-                "values (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"id"});
+            PreparedStatement stmt = connection
+                    .prepareStatement(SQL_CREATE_USER, new String[]{"id"});
             stmt.setString(1, user.getEmail());
             stmt.setString(2, user.getName());
             stmt.setString(3, user.getLogin());
@@ -51,10 +64,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User updateUser(User user) {
-        String sqlQuery = "update users set email = ?, " +
-                "name = ?, login = ?, birthday = ? " +
-                "where id = ?";
-        jdbcTemplate.update(sqlQuery
+        jdbcTemplate.update(SQL_UPDATE_USER
                 , user.getEmail()
                 , user.getName()
                 , user.getLogin()
@@ -65,9 +75,8 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User getUser(Long id) {
-        String sql = "select * from users where id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, this::makeUser, id);
+            return jdbcTemplate.queryForObject(SQL_GET_USER, this::makeUser, id);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -75,22 +84,17 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void addFriend(Long id, Long friendId) {
-        String sqlQuery = "insert into FRIENDS (FRIEND_ID_FROM, FRIEND_ID_TO) " +
-                "values (?, ?)";
-        jdbcTemplate.update(sqlQuery, id, friendId);
+        jdbcTemplate.update(SQL_ADD_FRIEND, id, friendId);
     }
 
     @Override
     public void delFriend(Long id, Long friendId) {
-        String sqlQuery = "delete from FRIENDS " +
-                "where FRIEND_ID_FROM = ? and FRIEND_ID_TO = ?";
-        jdbcTemplate.update(sqlQuery, id, friendId);
+        jdbcTemplate.update(SQL_DEL_FRIEND, id, friendId);
     }
 
     @Override
     public Collection<Long> getFriends(Long id) {
-        String sql = "select FRIEND_ID_TO as ID from FRIENDS where FRIEND_ID_FROM = ?";
-        return jdbcTemplate.query(sql, this::makeUserId, id);
+        return jdbcTemplate.query(SQL_GET_FRIENDS, this::makeUserId, id);
     }
 
     private Long makeUserId(ResultSet rs, int rowNum) throws SQLException {

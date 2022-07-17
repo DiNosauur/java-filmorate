@@ -18,15 +18,15 @@ public class GenreDbStorage implements GenreStorage {
     private final JdbcTemplate jdbcTemplate;
     private final Map<Integer, Genre> genres = new HashMap<>();
 
-    public GenreDbStorage(JdbcTemplate jdbcTemplate){
+    public GenreDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from GENRES");
-        while(userRows.next()) {
+        while (userRows.next()) {
             genres.put(userRows.getInt("id")
                     , Genre.builder()
-                    .id(userRows.getInt("id"))
-                    .name(userRows.getString("name"))
-                    .build());
+                            .id(userRows.getInt("id"))
+                            .name(userRows.getString("name"))
+                            .build());
         }
     }
 
