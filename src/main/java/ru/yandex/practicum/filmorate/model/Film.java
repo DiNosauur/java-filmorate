@@ -8,8 +8,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @Builder
@@ -18,7 +18,9 @@ public class Film {
     public static final LocalDate MIN_RELEASE_DATE = LocalDate.of(1895, 12, 28);
 
     private Long id;
-    private Set<Long> likes;
+    private Collection<Long> likes;
+    private Collection<Genre> genres;
+    private MPA mpa;
     @NotNull
     @NotBlank
     private String name;
@@ -29,7 +31,14 @@ public class Film {
     private LocalDate releaseDate;
     private int duration;
 
-    public Set<Long> getLikes() {
+    public Collection<Genre> getGenres() {
+        if (genres == null) {
+            genres = new HashSet<>();
+        }
+        return genres;
+    }
+
+    public Collection<Long> getLikes() {
         if (likes == null) {
             likes = new HashSet<>();
         }

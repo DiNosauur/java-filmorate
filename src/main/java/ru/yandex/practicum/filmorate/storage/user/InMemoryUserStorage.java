@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -79,7 +78,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Set<Long> getFriends(Long id) {
+    public Collection<Long> getFriends(Long id) {
         if (id == null) {
             return null;
         }
