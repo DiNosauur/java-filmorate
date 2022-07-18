@@ -12,12 +12,14 @@ import java.util.Map;
 @Component
 public class MPADbStorage implements MPAStorage {
 
+    private static final String SQL_FIND_ALL_MPA = "select * from MPA";
+
     private final JdbcTemplate jdbcTemplate;
     private final Map<Integer, MPA> mpa = new HashMap<>();
 
     public MPADbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from MPA");
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet(SQL_FIND_ALL_MPA);
         while (userRows.next()) {
             mpa.put(userRows.getInt("id")
                     , MPA.builder()

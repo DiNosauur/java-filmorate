@@ -15,12 +15,17 @@ import java.util.Map;
 @Component
 public class GenreDbStorage implements GenreStorage {
 
+    private static final String SQL_FIND_ALL_GENRES =
+            "select * from GENRES";
+    private static final String SQL_GET_FILM_GENRES =
+            "select G.* from FILM_GENRES F, GENRES G where F.FILM_ID = ? AND G.ID = F.GENRE_ID";
+
     private final JdbcTemplate jdbcTemplate;
     private final Map<Integer, Genre> genres = new HashMap<>();
 
     public GenreDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from GENRES");
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet(SQL_FIND_ALL_GENRES);
         while (userRows.next()) {
             genres.put(userRows.getInt("id")
                     , Genre.builder()
@@ -42,9 +47,7 @@ public class GenreDbStorage implements GenreStorage {
 
     @Override
     public Collection<Genre> getFilmGenre(Long filmId) {
-        String sql = "select G.* from FILM_GENRES F, GENRES G " +
-                "where F.FILM_ID = ? AND G.ID = F.GENRE_ID";
-        return jdbcTemplate.query(sql, this::makeGenre, filmId);
+        return jdbcTemplate.query(SQL_GET_FILM_GENRES, this::makeGenre, filmId);
     }
 
     private Genre makeGenre(ResultSet rs, int rowNum) throws SQLException {
